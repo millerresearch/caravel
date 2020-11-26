@@ -7,7 +7,7 @@
 */
 
 #define PROJECT 3
-#define NUMNODES 6
+#define MAXNODES 6
 
 void main()
 {
@@ -34,21 +34,25 @@ void main()
     /*
           Inputs       | Outputs
 	Node  MOSI SCK  SS   MISO TXRDY RXRDY
-	0     0    6    12   18   24    30
-	1     1    7    13   19   25    31
-	2     2    8    14   20   26    32
-	3     3    9    15   21   27    33
-	4     4   10    16   22   28    34
-	5     5   11    17   23   29    35
+	5     0    1     2    3    4     7
+	4     8    9    10   11   12    13
+	3     14   15   16   17   18    19
+	2     20   21   22   23   24    25
+	1     26   27   28   29   30    31
+	0     32   33   34   35   36    37
 
     */
 
 	volatile uint32_t *io = &reg_mprj_io_0;
-	for (int i = 0; i < NUMNODES; i++) {
-		for (int j = 0; j <= 12; j += 6)
-			io[i + j] = GPIO_MODE_USER_STD_INPUT_NOPULL;
-		for (int j = 18; j <= 30; j += 6)
-			io[i + j] = GPIO_MODE_USER_STD_OUTPUT;
+	for (int i = 0; i < MAXNODES; i++) {
+		*io++ = GPIO_MODE_USER_STD_INPUT_NOPULL;
+		*io++ = GPIO_MODE_USER_STD_INPUT_NOPULL;
+		*io++ = GPIO_MODE_USER_STD_INPUT_PULLUP;
+		*io++ = GPIO_MODE_USER_STD_OUTPUT;
+		*io++ = GPIO_MODE_USER_STD_OUTPUT;
+		if (i == 0)	// skip tx and rx
+			io += 2;
+		*io++ = GPIO_MODE_USER_STD_OUTPUT;
 	}
 			
     /* Apply configuration */
