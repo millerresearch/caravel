@@ -21,12 +21,19 @@ module spinet_tb;
 	reg mosi0, sck0, ss0;
 	wire [N-1:0] mosi, sck, ss;
 	wire [N-1:0] miso, txrdy, rxrdy;
-	assign mprj_io[5:0]   = {mosi[5:1],mosi0};
-	assign mprj_io[11:6]  = {sck[5:1],sck0};
-	assign mprj_io[17:12] = {ss[5:1],ss0};
-	assign miso  = mprj_io[23:18];
-	assign txrdy = mprj_io[29:24];
-	assign rxrdy = mprj_io[35:30];
+	assign {rxrdy[5],txrdy[5],miso[5]} = {mprj_io[7],mprj_io[4:3]};
+	assign {rxrdy[4],txrdy[4],miso[4]} = mprj_io[13:11];
+	assign {rxrdy[3],txrdy[3],miso[3]} = mprj_io[19:17];
+	assign {rxrdy[2],txrdy[2],miso[2]} = mprj_io[25:23];
+	assign {rxrdy[1],txrdy[1],miso[1]} = mprj_io[31:29];
+	assign {rxrdy[0],txrdy[0],miso[0]} = mprj_io[37:35];
+
+	assign mprj_io[2:0]   = {ss[5],sck[5],mosi[5]};
+	assign mprj_io[10:8]  = {ss[4],sck[4],mosi[4]};
+	assign mprj_io[16:14] = {ss[3],sck[3],mosi[3]};
+	assign mprj_io[22:20] = {ss[2],sck[2],mosi[2]};
+	assign mprj_io[28:26] = {ss[1],sck[1],mosi[1]};
+	assign mprj_io[34:32] = {ss0,sck0,mosi0};
 
 	initial begin
 		sck0 = 0;
